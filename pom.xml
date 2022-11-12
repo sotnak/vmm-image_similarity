@@ -43,7 +43,7 @@
             <version>2.7.5</version>
         </dependency>
 
-        <!--  !!!!! DONT TOUCH THIS SHIT, DONT EVEN TRY TO UPDATE IT !!!!! -->
+        <!--  !!!!! DON'T TOUCH THIS SHIT, DON'T EVEN TRY TO UPDATE IT !!!!! -->
         <dependency>
             <groupId>com.twelvemonkeys.common</groupId>
             <artifactId>common-image</artifactId>
@@ -99,7 +99,7 @@
             <artifactId>lucene-analyzers-common</artifactId>
             <version>8.11.2</version>
         </dependency>
-        <!--  !!!!! DONT TOUCH THIS SHIT, DONT EVEN TRY TO UPDATE IT !!!!! -->
+        <!--  !!!!! DON'T TOUCH THIS SHIT, DON'T EVEN TRY TO UPDATE IT !!!!! -->
 
     </dependencies>
 
