@@ -1,6 +1,8 @@
 package cz.cvut.fit.vmm.controller
 
 import cz.cvut.fit.vmm.ImageGetter
+import cz.cvut.fit.vmm.lire.Searcher
+import net.semanticmetadata.lire.imageanalysis.features.global.EdgeHistogram
 import org.springframework.core.io.ByteArrayResource
 import org.springframework.http.MediaType
 import org.springframework.web.bind.annotation.GetMapping
@@ -14,7 +16,10 @@ data class Message(val endPoint: String, val text: String)
 @RestController
 class Controller {
     @PostMapping("/match")
-    fun match(@RequestParam("file") uploadedImage: MultipartFile): Message = Message("match", uploadedImage.originalFilename ?: uploadedImage.name)
+    fun match(@RequestParam("file") uploadedImage: MultipartFile): Message{
+        Searcher.search<EdgeHistogram>(uploadedImage.inputStream, 5)
+        return Message("match", uploadedImage.originalFilename ?: uploadedImage.name)
+    }
 
     @GetMapping("/img", produces = [MediaType.IMAGE_JPEG_VALUE])
     fun img(@RequestParam fileName: String): ByteArrayResource = ImageGetter.get(fileName)
