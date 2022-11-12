@@ -9,7 +9,7 @@ import javax.annotation.PostConstruct
 
 @Service
 object Indexer {
-    fun indexImages(threadCount: Int = 3){
+    fun indexImages(threadCount: Int = Runtime.getRuntime().availableProcessors()){
         val indexer = ParallelIndexer(threadCount, "index", "src/main/resources/images/")
         indexer.addExtractor(EdgeHistogram::class.java)
         indexer.addExtractor(ColorLayout::class.java)
@@ -18,5 +18,5 @@ object Indexer {
     }
 
     @PostConstruct
-    fun initIndex() = indexImages(7)
+    fun initIndex() = indexImages()
 }

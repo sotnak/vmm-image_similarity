@@ -1,0 +1,7 @@
+###
+GET http://localhost:8080/img?fileName=404-720x720.jpg
+Accept: image/jpeg
+
+###
+GET https://picsum.photos/720
+Accept: image/jpeg
