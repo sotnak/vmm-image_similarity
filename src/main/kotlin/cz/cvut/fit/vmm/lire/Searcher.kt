@@ -30,9 +30,11 @@ object Searcher {
 
         for (i in 0 until hits.length()){
             val document = indexReader.document(hits.documentID(i))
-            val fileName = document.getValues(DocumentBuilder.FIELD_NAME_IDENTIFIER)[0].split('/').last()
+            val filePath = Paths.get(document.getValues(DocumentBuilder.FIELD_NAME_IDENTIFIER)[0])
+            val fileName: String = filePath.fileName.toString()
             val url = "http://localhost:8080/img?fileName=${fileName}"
-            results.add( MatchedImage(url, fileName) )
+            val distance = hits.score(i)
+            results.add( MatchedImage(url, fileName, distance) )
         }
 
         return results
