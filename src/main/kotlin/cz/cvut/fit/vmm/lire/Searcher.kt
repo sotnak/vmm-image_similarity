@@ -16,49 +16,54 @@ import java.nio.file.Paths
 import javax.imageio.ImageIO
 
 
-object Searcher {
-    private fun getFeature(featureStr: String): Class<out GlobalFeature> {
-        return when(featureStr){
-            "ColorLayout" -> ColorLayout::class.java
-            "EdgeHistogram" -> EdgeHistogram::class.java
-            "ScalableColor" -> ScalableColor::class.java
+class Searcher(inputStream: InputStream) {
+    private val indexReader: DirectoryReader = DirectoryReader.open(FSDirectory.open(Paths.get("index")))
+    private val document = createDocument(inputStream)
 
-            else -> throw IllegalArgumentException("unknown feature")
+    // equivalent of static methods
+    companion object{
+        private fun getFeature(featureStr: String): Class<out GlobalFeature> {
+            return when(featureStr){
+                "ColorLayout" -> ColorLayout::class.java
+                "EdgeHistogram" -> EdgeHistogram::class.java
+                "ScalableColor" -> ScalableColor::class.java
+
+                else -> throw IllegalArgumentException("unknown feature")
+            }
+        }
+
+        private fun getFieldName(klass: Class<out GlobalFeature>): String {
+            return when(klass){
+                ColorLayout::class.java -> DocumentBuilder.FIELD_NAME_COLORLAYOUT
+                EdgeHistogram::class.java -> DocumentBuilder.FIELD_NAME_EDGEHISTOGRAM
+                ScalableColor::class.java -> DocumentBuilder.FIELD_NAME_SCALABLECOLOR
+                else -> throw IllegalArgumentException("unknown features class")
+            }
+        }
+
+        private fun createDocument(inputStream: InputStream): Document {
+            val globalDocumentBuilder = GlobalDocumentBuilder()
+            globalDocumentBuilder.addExtractor(ColorLayout::class.java)
+            globalDocumentBuilder.addExtractor(EdgeHistogram::class.java)
+            globalDocumentBuilder.addExtractor(ScalableColor::class.java)
+
+            return globalDocumentBuilder.createDocument(ImageIO.read(inputStream), "search_subject")
         }
     }
 
-    private fun getFieldName(klass: Class<out GlobalFeature>): String {
-        return when(klass){
-            ColorLayout::class.java -> DocumentBuilder.FIELD_NAME_COLORLAYOUT
-            EdgeHistogram::class.java -> DocumentBuilder.FIELD_NAME_EDGEHISTOGRAM
-            ScalableColor::class.java -> DocumentBuilder.FIELD_NAME_SCALABLECOLOR
-            else -> throw IllegalArgumentException("unknown features class")
-        }
-    }
-
-    private fun createDocument(inputStream: InputStream): Document {
-        val globalDocumentBuilder = GlobalDocumentBuilder()
-        globalDocumentBuilder.addExtractor(ColorLayout::class.java)
-        globalDocumentBuilder.addExtractor(EdgeHistogram::class.java)
-        globalDocumentBuilder.addExtractor(ScalableColor::class.java)
-
-        return globalDocumentBuilder.createDocument(ImageIO.read(inputStream), "search_subject")
-    }
-
-    private fun fastSearch(document: Document, indexReader: DirectoryReader, klass: Class<out GlobalFeature>, hitCount: Int): ImageSearchHits {
+    private fun fastSearch(klass: Class<out GlobalFeature>, hitCount: Int): ImageSearchHits {
         val searcher = GenericFastImageSearcher(hitCount, klass)
         return searcher.search(document, indexReader)
     }
 
-    private fun reRank(klass: Class<out GlobalFeature>, indexReader: DirectoryReader, document: Document, hits: ImageSearchHits): ImageSearchHits {
-
+    private fun reRank(klass: Class<out GlobalFeature>, hits: ImageSearchHits): ImageSearchHits {
         val fieldName = getFieldName(klass)
 
         val filter = RerankFilter(klass, fieldName)
         return filter.filter(hits, indexReader, document)
     }
 
-    private fun addResults(indexReader: DirectoryReader, results : MutableMap<String, MatchedImage>, hits: ImageSearchHits, weight: Double){
+    private fun addResults(results : MutableMap<String, MatchedImage>, hits: ImageSearchHits, weight: Double){
         for (i in 0 until hits.length()){
             val hitDocument = indexReader.document(hits.documentID(i))
             val filePath = Paths.get(hitDocument.getValues(DocumentBuilder.FIELD_NAME_IDENTIFIER)[0])
@@ -74,27 +79,24 @@ object Searcher {
         }
     }
 
-    fun search(inputStream: InputStream, searchOptions: List<Pair<String, Double>>, hitCount: Int): List<MatchedImage>{
+    fun search(searchOptions: List<Pair<String, Double>>, hitCount: Int): List<MatchedImage>{
 
         val weightedKlasses = searchOptions.map { Pair( getFeature( it.first ), it.second) }.sortedBy { (_, value) -> value }
 
-        val document = createDocument(inputStream)
-        val indexReader = DirectoryReader.open(FSDirectory.open(Paths.get("index")))
-
-        var hits = fastSearch(document, indexReader, weightedKlasses.first().first, hitCount)
+        var hits = fastSearch(weightedKlasses.first().first, hitCount * 2)
         val results : MutableMap<String, MatchedImage> = mutableMapOf()
 
-        addResults(indexReader, results, hits, weightedKlasses.first().second)
+        addResults(results, hits, weightedKlasses.first().second)
 
         for ((feature, weight) in weightedKlasses){
             if(feature == weightedKlasses.first().first){
                 continue
             }
 
-            hits = reRank(feature, indexReader, document, hits)
-            addResults(indexReader, results, hits, weight)
+            hits = reRank(feature, hits)
+            addResults(results, hits, weight)
         }
 
-        return results.values.toList().sortedBy { it.distance }
+        return results.values.toList().sortedBy { it.distance }.subList(0,hitCount)
     }
 }
