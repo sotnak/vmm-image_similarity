@@ -14,6 +14,8 @@ import org.apache.lucene.store.FSDirectory
 import java.io.InputStream
 import java.nio.file.Paths
 import javax.imageio.ImageIO
+import kotlin.math.pow
+import kotlin.math.sqrt
 
 
 class Searcher(inputStream: InputStream) {
@@ -72,7 +74,7 @@ class Searcher(inputStream: InputStream) {
             val distance = hits.score(i)
 
             if (results.containsKey(url)){
-                results[url]?.distance = results[url]?.distance!! + distance * weight   //just results[url] += distance * weight
+                results[url]?.distance = sqrt( results[url]?.distance?.pow(2)!! + (distance * weight).pow(2) ) //euclidean distance
             } else {
                 results[url] = MatchedImage(url, fileName, distance * weight)
             }

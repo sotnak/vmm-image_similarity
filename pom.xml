@@ -104,6 +104,38 @@
             <artifactId>lucene-analyzers-common</artifactId>
             <version>8.11.2</version>
         </dependency>
+
+        <!-- probably won't work for windows -->
+        <!--dependency>
+            <groupId>net.semanticmetadata.lire</groupId>
+            <artifactId>lire</artifactId>
+            <version>1.0</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/LIRE-1.0_b04.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-codec</artifactId>
+            <version>1.10</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/commons-codec-1.10.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>2.5</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/commons-io-2.5.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-math3</artifactId>
+            <version>3.6.1</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/commons-math3-3.6.1.jar</systemPath>
+        </dependency-->
+        <!-- probably won't work for windows -->
+        
         <!--  !!!!! DON'T TOUCH THIS SHIT, DON'T EVEN TRY TO UPDATE IT !!!!! -->
 
     </dependencies>
