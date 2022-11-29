@@ -7,71 +7,75 @@
 </head>
 <body>
 <div class="container">
-    <h1 class="stred">Vyhledávání obrázků pomocí mpeg7 deskriptorů</h1>
-    <div class="prva_metoda">
-        <h2>První metóda</h2>
-        <p class="stred">Vyhledávání na základě jednoho deskriptoru</p>
-        <form id="form1" action="http://localhost:8080/oldMatch" method="POST" enctype="multipart/form-data">
-            <div class="input-group">
-                <div class="form">
-                    <label for="file_1">Select file</label>
-                    <input id="file_1" type="file" name="file" />
-                </div>
-                <p class="stred">Vyber jeden deskriptor</p>
-                <div class="form">
-                    <label for="featureSelector">Select features</label>
-                    <select id="featureSelector" name="feature">
-                        <option value="ColorLayout" >Color Layout</option>
-                        <option value="EdgeHistogram">Edge Histogram</option>
-                        <option value="ScalableColor">Scalable Color</option>
-                    </select>
-                </div>
-
-                <p class="stred">Vyber počet vyhledaných obrázků</p>
-
-                <div class="form">
-                    <label for="count_1">Select count of results</label>
-                    <input id="count_1" name="count" type="number"/>
-                </div>
-            </div>
-            <button class="submit-btn" type="submit">Upload</button>
-        </form>
+    <div class="nadpis">
+        <h1 class="stred">Vyhledávání obrázků pomocí mpeg7 deskriptorů</h1>
     </div>
+    <div class="search">
+        <div class="prva_metoda">
+            <h2>První metóda</h2>
+            <p class="stred">Vyhledávání na základě jednoho deskriptoru</p>
+            <form id="form1" action="http://localhost:8080/oldMatch" method="POST" enctype="multipart/form-data">
+                <div class="input-group">
+                    <div class="form">
+                        <label for="file_1">Select file</label>
+                        <input id="file_1" type="file" name="file" />
+                    </div>
+                    <p class="stred">Vyber jeden deskriptor</p>
+                    <div class="form">
+                        <label for="featureSelector">Select features</label>
+                        <select id="featureSelector" name="feature">
+                            <option value="ColorLayout" >Color Layout</option>
+                            <option value="EdgeHistogram">Edge Histogram</option>
+                            <option value="ScalableColor">Scalable Color</option>
+                        </select>
+                    </div>
 
-    <div class="druha_metoda">
-        <h2>Druhá metóda</h2>
-        <p class="stred">Vyhledávání na základě kombinácie deskriptorů</p>
-        <form id="form" action="http://localhost:8080/match" method="POST" enctype="multipart/form-data">
-            <div class="input-group">
-                <div class="form">
-                    <label for="file">Select file</label>
-                    <input id="file" type="file" name="file" />
-                </div>
-                <p class="stred">Zaškrtni které deskriptory chceš použít a urči jim váhy</p>
-                <div class="form">
-                    <label for="colorLayout_weight">Váha ColorLayout: </label>
-                    <input id="colorLayout_weight" name="colorLayout_weight" type="number"/>
+                    <p class="stred">Vyber počet vyhledaných obrázků</p>
 
+                    <div class="form">
+                        <label for="count_1">Select count of results</label>
+                        <input id="count_1" name="count" type="number"/>
+                    </div>
                 </div>
+                <button class="submit-btn" type="submit">Upload</button>
+            </form>
+        </div>
 
-                <div class="form">
-                    <label for="edgeHistogram_weight">Váha EdgeHistogram: </label>
-                    <input id="edgeHistogram_weight" name="edgeHistogram_weight" type="number"/>
-                </div>
+        <div class="druha_metoda">
+            <h2>Druhá metóda</h2>
+            <p class="stred">Vyhledávání na základě kombinácie deskriptorů</p>
+            <form id="form" action="http://localhost:8080/match" method="POST" enctype="multipart/form-data">
+                <div class="input-group">
+                    <div class="form">
+                        <label for="file">Select file</label>
+                        <input id="file" type="file" name="file" />
+                    </div>
+                    <p class="stred">Zaškrtni které deskriptory chceš použít a urči jim váhy</p>
+                    <div class="form">
+                        <label for="colorLayout_weight">Váha ColorLayout: </label>
+                        <input id="colorLayout_weight" name="colorLayout_weight" type="number"/>
 
-                <div class="form">
-                    <label for="scalableColor_weight">Váha ScalableColor: </label>
-                    <input id="scalableColor_weight" name="scalableColor_weight" type="number"/>
-                </div>
+                    </div>
 
-                <p class="stred">Vyber počet vyhledaných obrázků</p>
-                <div class="form">
-                    <label for="count">Select count of results</label>
-                    <input id="count" name="count" type="number"/>
+                    <div class="form">
+                        <label for="edgeHistogram_weight">Váha EdgeHistogram: </label>
+                        <input id="edgeHistogram_weight" name="edgeHistogram_weight" type="number"/>
+                    </div>
+
+                    <div class="form">
+                        <label for="scalableColor_weight">Váha ScalableColor: </label>
+                        <input id="scalableColor_weight" name="scalableColor_weight" type="number"/>
+                    </div>
+
+                    <p class="stred">Vyber počet vyhledaných obrázků</p>
+                    <div class="form">
+                        <label for="count">Select count of results</label>
+                        <input id="count" name="count" type="number"/>
+                    </div>
                 </div>
-            </div>
-            <button class="submit-btn" type="submit">Upload</button>
-        </form>
+                <button class="submit-btn" type="submit">Upload</button>
+            </form>
+        </div>
     </div>
 </div>
 </body>
