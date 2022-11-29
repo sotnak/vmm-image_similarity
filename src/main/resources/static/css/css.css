@@ -1,0 +1,76 @@
+html{
+    font-family: Arial, Helvetica, sans-serif
+}
+
+* {
+    box-sizing: border-box;
+}
+
+/* Create two equal columns that floats next to each other */
+.column {
+    float: left;
+    width: 48%;
+    padding: 10px;
+    height: 500px; /* Should be removed. Only for demonstration */
+    margin-top: 1%;
+    position: fixed;
+    text-align: center;
+}
+
+.column img{
+    width: 80%;
+}
+
+/* Clear floats after the columns */
+.row {
+    display: flex;
+
+}
+
+div.scroll {
+    text-align: center;
+    width: 48%;
+    padding: 10px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    margin-left: 50%;
+    margin-top: 1%;
+}
+div.scroll img{
+    width: 80%;
+}
+
+.stred {
+    text-align: center;
+    font-weight: bold;
+}
+
+.prva_metoda{
+    width: 70%;
+    margin: auto;
+    text-align: center;
+    padding-top: 25px;
+    padding-bottom: 25px;
+    background-color: cadetblue;
+    margin-bottom: 50px;
+}
+
+.druha_metoda{
+    width: 70%;
+    margin: auto;
+    text-align: center;
+    padding-top: 25px;
+    padding-bottom: 25px;
+    background-color: burlywood;
+}
+
+.input-group{
+    width: 50%;
+    margin: auto;
+    text-align: left;
+}
+
+.form{
+    margin: 20px;
+}
+

@@ -1,31 +1,43 @@
 package cz.cvut.fit.vmm.controller
 
-import cz.cvut.fit.vmm.ImageGetter
 import cz.cvut.fit.vmm.MatchedImage
 import cz.cvut.fit.vmm.Repository
 import cz.cvut.fit.vmm.lire.Searcher
-import org.springframework.core.io.ByteArrayResource
+import mu.KotlinLogging
 import org.springframework.http.MediaType
+import org.springframework.stereotype.Controller
+import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
-import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.multipart.MultipartFile
-import mu.KotlinLogging
-import org.springframework.ui.Model
 
-@RestController
-class Controller {
+@Controller
+class MainController {
+    var repository = Repository
     private val logger = KotlinLogging.logger {}
 
-    /*@PostMapping("/match", consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
-    fun match(@RequestParam("file") uploadedImage: MultipartFile, @RequestParam("features") features: MutableList<Pair<String, Double>>, @RequestParam("count") count: Int): List<MatchedImage> {
-        logger.info { "/match $features" }
-        val searcher = Searcher(uploadedImage.inputStream)
-        return searcher.search(features ,count)
-    }*/
+    @RequestMapping("/")
+    fun index(model: Model): String {
+        return "index"
+    }
 
-   /* @PostMapping("/match", consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
+
+    @PostMapping("/oldMatch", consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
+    fun oldMatch(@RequestParam("file") uploadedImage: MultipartFile, @RequestParam("feature") feature: String, @RequestParam("count") count: Int, model: Model): String {
+        logger.info { "/oldMatch $feature" }
+        repository.remove()
+        val searcher = Searcher(uploadedImage.inputStream)
+        repository.addToList(searcher.search(mutableListOf(Pair(feature, 1.0)), count) as MutableList<MatchedImage>)
+        val lists: List<MatchedImage> = repository.getList()
+        model.addAttribute("oldMatch", lists)
+        model.addAttribute("image", repository.getUploadImage())
+        return "oldMatch"
+    }
+
+
+    @PostMapping("/match", consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
     fun match(
         @RequestParam("file") uploadedImage: MultipartFile,
         @RequestParam("colorLayout", required = false) colorLayout: Boolean,
@@ -34,7 +46,8 @@ class Controller {
         @RequestParam("edgeHistogram_weight", required = false) edgeHistogram_weight: String,
         @RequestParam("scalableColor", required = false) scalableColor: Boolean,
         @RequestParam("scalableColor_weight", required = false) scalableColor_weight: String,
-        @RequestParam("count") count: Int): List<MatchedImage> {
+        @RequestParam("count") count: Int,
+        model: Model): String {
         //logger.info { "/match $features" }
         val searcher = Searcher(uploadedImage.inputStream)
         val features : MutableList<Pair<String, Double>> = mutableListOf()
@@ -49,29 +62,12 @@ class Controller {
         if(scalableColor){
             features.add(Pair("ScalableColor", scalableColor_weight.toDouble()))
         }
-        return searcher.search(features ,count)
-    }*/
-
-
-    @PostMapping("/test", consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
-    fun test(@RequestParam("file") uploadedImage: MultipartFile,@RequestParam("count") count: Int, cislo : String): List<MatchedImage> {
-        val list : MutableList<Pair<String, Double>> = mutableListOf()
-        logger.info { "/test $list" }
-        if(cislo.isEmpty()){
-            println("Cislo je null")
-        }
-        else{
-            println(cislo)
-        }
-        val searcher = Searcher(uploadedImage.inputStream)
-        list.add(Pair("ColorLayout", 1.0))
-        list.add(Pair("EdgeHistogram", 2.0))
-        return searcher.search(list,count)
+        repository.remove()
+        repository.addToList(searcher.search(features, count) as MutableList<MatchedImage>)
+        val lists: List<MatchedImage> = repository.getList()
+        model.addAttribute("match", lists)
+        model.addAttribute("image", repository.getUploadImage())
+        return "match" //searcher.search(features ,count)
     }
 
-    @GetMapping("/img", produces = [MediaType.IMAGE_JPEG_VALUE])
-    fun img(@RequestParam fileName: String): ByteArrayResource {
-        logger.info { "/img $fileName" }
-        return ImageGetter.get(fileName)
-    }
 }

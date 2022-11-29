@@ -1,6 +1,7 @@
 package cz.cvut.fit.vmm.lire
 
 import cz.cvut.fit.vmm.MatchedImage
+import cz.cvut.fit.vmm.Repository
 import net.semanticmetadata.lire.builders.DocumentBuilder
 import net.semanticmetadata.lire.builders.GlobalDocumentBuilder
 import net.semanticmetadata.lire.filters.RerankFilter
@@ -21,6 +22,7 @@ import kotlin.math.sqrt
 class Searcher(inputStream: InputStream) {
     private val indexReader: DirectoryReader = DirectoryReader.open(FSDirectory.open(Paths.get("index")))
     private val document = createDocument(inputStream)
+    var repository = Repository
 
     // equivalent of static methods
     companion object{
@@ -71,12 +73,17 @@ class Searcher(inputStream: InputStream) {
             val filePath = Paths.get(hitDocument.getValues(DocumentBuilder.FIELD_NAME_IDENTIFIER)[0])
             val fileName: String = filePath.fileName.toString()
             val url = "http://localhost:8080/img?fileName=${fileName}"
+            //println(url)
             val distance = hits.score(i)
-
-            if (results.containsKey(url)){
-                results[url]?.distance = sqrt( results[url]?.distance?.pow(2)!! + (distance * weight).pow(2) ) //euclidean distance
-            } else {
-                results[url] = MatchedImage(url, fileName, distance * weight)
+            if (distance != 0.0){
+                if (results.containsKey(url)){
+                    results[url]?.distance = sqrt( results[url]?.distance?.pow(2)!! + (distance * weight).pow(2) ) //euclidean distance
+                } else {
+                    results[url] = MatchedImage(url, fileName, distance * weight)
+                }
+            }
+            else{
+                repository.addUploadImage(MatchedImage(url, fileName, distance * weight))
             }
         }
     }

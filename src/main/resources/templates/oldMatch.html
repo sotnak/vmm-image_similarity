@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link th:href="@{/css/css.css}" rel="stylesheet">
+</head>
+<body>
+<div class="row">
+    <div class="column" th:each="image : ${image}">
+        <h1>Chosen image</h1>
+        <img th:src="${image.url}"/>
+    </div>
+    <div class="scroll" >
+        <h1>Found images</h1>
+        <div th:each="image : ${oldMatch}">
+            <img th:src="${image.url}"/>
+            <p th:text="${image.distance}"></p>
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>
