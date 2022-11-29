@@ -1,21 +1,21 @@
 package cz.cvut.fit.vmm.controller
 
+import cz.cvut.fit.vmm.ImageEncoder
+import cz.cvut.fit.vmm.InputStreamCloner
 import cz.cvut.fit.vmm.MatchedImage
-import cz.cvut.fit.vmm.Repository
 import cz.cvut.fit.vmm.lire.Searcher
 import mu.KotlinLogging
 import org.springframework.http.MediaType
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
-import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.multipart.MultipartFile
+import java.util.*
 
 @Controller
 class MainController {
-    var repository = Repository
     private val logger = KotlinLogging.logger {}
 
     @RequestMapping("/")
@@ -26,13 +26,15 @@ class MainController {
 
     @PostMapping("/oldMatch", consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
     fun oldMatch(@RequestParam("file") uploadedImage: MultipartFile, @RequestParam("feature") feature: String, @RequestParam("count") count: Int, model: Model): String {
-        logger.info { "/oldMatch $feature" }
-        repository.remove()
-        val searcher = Searcher(uploadedImage.inputStream)
-        repository.addToList(searcher.search(mutableListOf(Pair(feature, 1.0)), count) as MutableList<MatchedImage>)
-        val lists: List<MatchedImage> = repository.getList()
-        model.addAttribute("oldMatch", lists)
-        model.addAttribute("image", repository.getUploadImage())
+        logger.info { "/oldMatch: count: $count feature: $feature" }
+
+        val cloner = InputStreamCloner(uploadedImage.inputStream)
+
+        val searcher = Searcher(cloner.clone())
+        val list: List<MatchedImage> = searcher.search(mutableListOf(Pair(feature, 1.0)), count)
+        model.addAttribute("oldMatch", list)
+
+        model.addAttribute("image", ImageEncoder.encode(cloner.getByteArray()))
         return "oldMatch"
     }
 
@@ -40,34 +42,32 @@ class MainController {
     @PostMapping("/match", consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
     fun match(
         @RequestParam("file") uploadedImage: MultipartFile,
-        @RequestParam("colorLayout", required = false) colorLayout: Boolean,
-        @RequestParam("colorLayout_weight", required = false) coloLayout_weight: String,
-        @RequestParam("edgeHistogram", required = false) edgeHistogram: Boolean,
-        @RequestParam("edgeHistogram_weight", required = false) edgeHistogram_weight: String,
-        @RequestParam("scalableColor", required = false) scalableColor: Boolean,
-        @RequestParam("scalableColor_weight", required = false) scalableColor_weight: String,
+        @RequestParam("colorLayout_weight", required = false, defaultValue = "0") coloLayout_weight: Double,
+        @RequestParam("edgeHistogram_weight", required = false, defaultValue = "0") edgeHistogram_weight: Double,
+        @RequestParam("scalableColor_weight", required = false, defaultValue = "0") scalableColor_weight: Double,
         @RequestParam("count") count: Int,
         model: Model): String {
-        //logger.info { "/match $features" }
-        val searcher = Searcher(uploadedImage.inputStream)
+        logger.info { "/match: count $count colorLayout: $coloLayout_weight edgeHistogram: $edgeHistogram_weight scalableColor: $scalableColor_weight" }
+
+        val cloner = InputStreamCloner(uploadedImage.inputStream)
+
+        val searcher = Searcher(cloner.clone())
         val features : MutableList<Pair<String, Double>> = mutableListOf()
-        if(colorLayout){
-            features.add(Pair("ColorLayout", coloLayout_weight.toDouble()))
-            //println(coloLayout_weight.toDouble())
+        if(coloLayout_weight != 0.0){
+            features.add(Pair("ColorLayout", coloLayout_weight))
         }
-        if(edgeHistogram){
-            features.add(Pair("EdgeHistogram", edgeHistogram_weight.toDouble()))
-            //println(edgeHistogram_weight.toDouble())
+        if(edgeHistogram_weight != 0.0){
+            features.add(Pair("EdgeHistogram", edgeHistogram_weight))
         }
-        if(scalableColor){
-            features.add(Pair("ScalableColor", scalableColor_weight.toDouble()))
+        if(scalableColor_weight != 0.0){
+            features.add(Pair("ScalableColor", scalableColor_weight))
         }
-        repository.remove()
-        repository.addToList(searcher.search(features, count) as MutableList<MatchedImage>)
-        val lists: List<MatchedImage> = repository.getList()
-        model.addAttribute("match", lists)
-        model.addAttribute("image", repository.getUploadImage())
-        return "match" //searcher.search(features ,count)
+
+        val list = searcher.search(features, count)
+        model.addAttribute("match", list)
+
+        model.addAttribute("image", ImageEncoder.encode(cloner.getByteArray()))
+        return "match"
     }
 
 }

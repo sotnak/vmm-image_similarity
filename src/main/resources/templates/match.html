@@ -9,7 +9,8 @@
 <div class="row">
     <div class="column" th:each="image : ${image}">
         <h1>Chosen image</h1>
-        <img th:src="${image.url}"/>
+        <!img th:src="${image}"/>
+        <img  th:src="@{'data:image/jpeg;base64,'+${image}}" />
     </div>
     <div class="scroll" >
         <h1>Found images</h1>
