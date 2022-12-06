@@ -45,6 +45,7 @@ class MainController {
         @RequestParam("colorLayout_weight", required = false, defaultValue = "0") coloLayout_weight: Double,
         @RequestParam("edgeHistogram_weight", required = false, defaultValue = "0") edgeHistogram_weight: Double,
         @RequestParam("scalableColor_weight", required = false, defaultValue = "0") scalableColor_weight: Double,
+        @RequestParam("dominantColor_weight", required = false, defaultValue = "0") dominantColor_weight: Double,
         @RequestParam("count") count: Int,
         model: Model): String {
         logger.info { "/match: count $count colorLayout: $coloLayout_weight edgeHistogram: $edgeHistogram_weight scalableColor: $scalableColor_weight" }
@@ -61,6 +62,9 @@ class MainController {
         }
         if(scalableColor_weight != 0.0){
             features.add(Pair("ScalableColor", scalableColor_weight))
+        }
+        if(dominantColor_weight != 0.0){
+            features.add(Pair("DominantColor", dominantColor_weight))
         }
 
         val list = searcher.search(features, count)

@@ -1,21 +1,16 @@
 package cz.cvut.fit.vmm.lire
 
 import cz.cvut.fit.vmm.MatchedImage
-import cz.cvut.fit.vmm.controller.FeaturesHelper
 import mu.KotlinLogging
 import net.semanticmetadata.lire.builders.DocumentBuilder
-import net.semanticmetadata.lire.builders.GlobalDocumentBuilder
 import net.semanticmetadata.lire.filters.RerankFilter
 import net.semanticmetadata.lire.imageanalysis.features.GlobalFeature
-import net.semanticmetadata.lire.imageanalysis.features.global.*
 import net.semanticmetadata.lire.searchers.GenericFastImageSearcher
 import net.semanticmetadata.lire.searchers.ImageSearchHits
-import org.apache.lucene.document.Document
 import org.apache.lucene.index.DirectoryReader
 import org.apache.lucene.store.FSDirectory
 import java.io.InputStream
 import java.nio.file.Paths
-import javax.imageio.ImageIO
 import kotlin.math.pow
 import kotlin.math.sqrt
 
@@ -24,19 +19,7 @@ class Searcher(inputStream: InputStream) {
     private val logger = KotlinLogging.logger {}
 
     private val indexReader: DirectoryReader = DirectoryReader.open(FSDirectory.open(Paths.get("index")))
-    private val document = createDocument(inputStream)
-
-    // equivalent of static methods
-    companion object{
-        private fun createDocument(inputStream: InputStream): Document {
-            val globalDocumentBuilder = GlobalDocumentBuilder()
-            globalDocumentBuilder.addExtractor(ColorLayout::class.java)
-            globalDocumentBuilder.addExtractor(EdgeHistogram::class.java)
-            globalDocumentBuilder.addExtractor(ScalableColor::class.java)
-
-            return globalDocumentBuilder.createDocument(ImageIO.read(inputStream), "search_subject")
-        }
-    }
+    private val document = FeaturesHelper.createDocument(inputStream)
 
     private fun fastSearch(klass: Class<out GlobalFeature>, hitCount: Int): ImageSearchHits {
         logger.info { "search: $klass" }

@@ -1,6 +1,7 @@
 package cz.cvut.fit.vmm.lire
 
 import net.semanticmetadata.lire.imageanalysis.features.global.ColorLayout
+import net.semanticmetadata.lire.imageanalysis.features.global.DominantColor
 import net.semanticmetadata.lire.imageanalysis.features.global.EdgeHistogram
 import net.semanticmetadata.lire.imageanalysis.features.global.ScalableColor
 import net.semanticmetadata.lire.indexers.parallel.ParallelIndexer
@@ -14,6 +15,7 @@ object Indexer {
         indexer.addExtractor(EdgeHistogram::class.java)
         indexer.addExtractor(ColorLayout::class.java)
         indexer.addExtractor(ScalableColor::class.java)
+        indexer.addExtractor(DominantColor::class.java)
         indexer.run()
     }
 
