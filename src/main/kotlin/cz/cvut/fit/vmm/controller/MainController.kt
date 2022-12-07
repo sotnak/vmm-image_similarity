@@ -48,7 +48,7 @@ class MainController {
         @RequestParam("dominantColor_weight", required = false, defaultValue = "0") dominantColor_weight: Double,
         @RequestParam("count") count: Int,
         model: Model): String {
-        logger.info { "/match: count $count colorLayout: $coloLayout_weight edgeHistogram: $edgeHistogram_weight scalableColor: $scalableColor_weight" }
+        logger.info { "/match: count $count colorLayout: $coloLayout_weight edgeHistogram: $edgeHistogram_weight scalableColor: $scalableColor_weight dominantColor: $dominantColor_weight" }
 
         val cloner = InputStreamCloner(uploadedImage.inputStream)
 
