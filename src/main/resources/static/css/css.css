@@ -1,0 +1,112 @@
+html{
+    font-family: Arial, Helvetica, sans-serif
+}
+
+body{
+    margin: 0px;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+/* Create two equal columns that floats next to each other */
+.column {
+    float: left;
+    width: 48%;
+    padding: 10px;
+    height: 500px; /* Should be removed. Only for demonstration */
+    margin-top: 1%;
+    position: fixed;
+    text-align: center;
+}
+
+.column img{
+    width: 80%;
+}
+
+/* Clear floats after the columns */
+.row {
+    display: flex;
+
+}
+
+div.scroll {
+    text-align: center;
+    width: 48%;
+    padding: 10px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    margin-left: 50%;
+    margin-top: 1%;
+}
+div.scroll img{
+    width: 80%;
+}
+
+.stred {
+    text-align: center;
+    font-weight: bold;
+}
+
+.prva_metoda{
+    width: 70%;
+    text-align: center;
+    padding-top: 25px;
+    padding-bottom: 25px;
+    background-color: rgb(95, 158, 160, 0.6);
+    border-radius: 25px;
+    box-shadow: 20px 10px 20px gray;
+    margin-left: 5%;
+    margin-right: 5%;
+}
+
+
+
+
+.druha_metoda{
+    width: 70%;
+    margin: auto;
+    text-align: center;
+    padding-top: 25px;
+    padding-bottom: 25px;
+    background-color: burlywood;
+    border-radius: 25px;
+    box-shadow: 20px 10px 20px gray;
+    margin-left: 5%;
+    margin-right: 5%;
+}
+
+.input-group{
+    width: 50%;
+    margin: auto;
+    text-align: left;
+}
+
+.form{
+    margin: 20px;
+}
+
+.nadpis{
+    margin: 50px;
+}
+
+.search{
+    display: flex;
+}
+
+button{
+    padding: 10px 50px;
+    border: 0px;
+    background-color: white;
+    color: black;
+    font-weight: bold;
+    border-radius: 25px;
+    transition: 0.3s;
+}
+
+button:hover{
+    background-color: gray;
+    color: white;
+    transition: 0.3s;
+}

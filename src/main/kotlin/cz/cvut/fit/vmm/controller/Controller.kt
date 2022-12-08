@@ -16,23 +16,25 @@ import mu.KotlinLogging
 class Controller {
     private val logger = KotlinLogging.logger {}
 
-    @PostMapping("/match", consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
-    fun match(@RequestParam("file") uploadedImage: MultipartFile, @RequestParam("features") features: List<Pair<String, Double>>, @RequestParam("count") count: Int): List<MatchedImage> {
-        logger.info { "/match $features" }
+    @PostMapping("/test", consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
+    fun test(@RequestParam("file") uploadedImage: MultipartFile,@RequestParam("count") count: Int, cislo : String): List<MatchedImage> {
+        val list : MutableList<Pair<String, Double>> = mutableListOf()
+        logger.info { "/test $list" }
+        if(cislo.isEmpty()){
+            println("Cislo je null")
+        }
+        else{
+            println(cislo)
+        }
         val searcher = Searcher(uploadedImage.inputStream)
-        return searcher.search(features, count)
-    }
-
-    @PostMapping("/oldMatch", consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
-    fun oldMatch(@RequestParam("file") uploadedImage: MultipartFile, @RequestParam("feature") feature: String, @RequestParam("count") count: Int): List<MatchedImage> {
-        logger.info { "/oldMatch $feature" }
-        val searcher = Searcher(uploadedImage.inputStream)
-        return searcher.search(listOf(Pair(feature, 1.0)), count)
+        list.add(Pair("ColorLayout", 1.0))
+        list.add(Pair("EdgeHistogram", 2.0))
+        return searcher.search(list,count)
     }
 
     @GetMapping("/img", produces = [MediaType.IMAGE_JPEG_VALUE])
     fun img(@RequestParam fileName: String): ByteArrayResource {
-        logger.info { "/img $fileName" }
+        //logger.info { "/img $fileName" }
         return ImageGetter.get(fileName)
     }
 }

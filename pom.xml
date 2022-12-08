@@ -138,6 +138,11 @@
         
         <!--  !!!!! DON'T TOUCH THIS SHIT, DON'T EVEN TRY TO UPDATE IT !!!!! -->
 
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-thymeleaf</artifactId>
+        </dependency>
+
     </dependencies>
 
     <build>

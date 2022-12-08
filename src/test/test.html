@@ -1,20 +1,19 @@
-<body>
-    <div class="container">
-        <h1>Multipart File Upload</h1>
-        <form id="form" action="http://localhost:8080/oldMatch" method="POST" enctype="multipart/form-data">
-            <div class="input-group">
-                <label for="file">Select file</label>
-                <input id="file" type="file" name="file" />
-                <label for="featureSelector">Select feature</label>
-                <select id="featureSelector" name="feature">
-                    <option value="ColorLayout" selected="selected">Color Layout</option>
-                    <option value="EdgeHistogram">Edge Histogram</option>
-                    <option value="ScalableColor">Scalable Color</option>
-                </select>
-                <label for="count">Select count of results</label>
-                <input id="count" name="count" type="number"/>
-            </div>
-            <button class="submit-btn" type="submit">Upload</button>
-        </form>
-    </div>
+<div class="container">
+    <h1>Multipart File Upload</h1>
+    <form id="form" action="http://localhost:8080/oldMatch" method="POST" enctype="multipart/form-data">
+        <div class="input-group">
+            <label for="file">Select file</label>
+            <input id="file" type="file" name="file" />
+            <label for="featureSelector">Select feature</label>
+            <select id="featureSelector" name="feature">
+                <option value="ColorLayout" selected="selected">Color Layout</option>
+                <option value="EdgeHistogram">Edge Histogram</option>
+                <option value="ScalableColor">Scalable Color</option>
+            </select>
+            <label for="count">Select count of results</label>
+            <input id="count" name="count" type="number"/>
+        </div>
+        <button class="submit-btn" type="submit">Upload</button>
+    </form>
+</div>
 </body>
