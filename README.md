@@ -1,7 +1,7 @@
 ## VMM - Image similarity using MPEG7 descriptors
 
 An Spring Boot app with Thymeleaf frontend.
-Includes extended [LIRE library](https://gitlab.fit.cvut.cz/antospa2/vmm-lire).
+Includes extended [LIRE library](https://github.com/sotnak/vmm-lire).
 
 Before starting the application make sure, that ./lib/ is added as local library folder.
 Starting the app may take a while, because indexes are created each time.
